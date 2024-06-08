@@ -11,6 +11,7 @@ const isVerified = async (req, res, next) => {
     }
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decode.id);
+    console.log(req.user);
     next();
   } catch (error) {
     return res.status(401).json({

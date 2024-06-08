@@ -6,6 +6,8 @@ const {
   deleteUser,
   getUsers,
   getUserWithoutLogin,
+  getDetails,
+  getUserById,
 } = require("../controller/UserController");
 const { isVerified } = require("../middleware/auth");
 
@@ -20,4 +22,7 @@ router
 
 router.route("/all-login").get(isVerified, getUsers);
 router.route("/all").get(getUserWithoutLogin);
+router.route("/me").get(isVerified, getDetails);
+router.route("/:userId").get(isVerified, getUserById);
+
 module.exports = router;
