@@ -2,16 +2,23 @@ const User = require("../models/User");
 const bycrypt = require("bcryptjs");
 const sendToken = require("../utils/Token");
 const register = async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, username } = req.body;
   try {
     const user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: "User already exists" });
     }
+    const usernameExist = await User.findOne({
+      username,
+    });
+    if (usernameExist) {
+      return res.status(400).json({ message: "Username already exists" });
+    }
     const hassedPassword = await bycrypt.hash(password, 10);
     const newUser = await User.create({
       name,
       email,
+      username,
       password: hassedPassword,
     });
     await newUser.save();

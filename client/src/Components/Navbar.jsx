@@ -49,14 +49,15 @@ const Navbar = () => {
                 <Button>
                     Post
                 </Button>
+                <Bottom>
+                    <ProfileImage src="https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg?size=626&ext=jpg&ga=GA1.1.1141335507.1717718400&semt=ais_user" alt="profile" />
+                    <Content>
+                        <Name>John Doe</Name>
+                        <Username>@johndoe</Username>
+                    </Content>
+                </Bottom>
             </IconsList>
-            <Bottom>
-                <ProfileImage src="https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg?size=626&ext=jpg&ga=GA1.1.1141335507.1717718400&semt=ais_user" alt="profile" />
-                <Content>
-                    <Name>John Doe</Name>
-                    <Username>@johndoe</Username>
-                </Content>
-            </Bottom>
+
         </Container>
     )
 }
@@ -67,8 +68,8 @@ const Container = styled.div`
     display: flex;
     flex-direction: column;
     padding: 10px;
-    height: 100vh;
-    width: 15vw;
+    /* height: 100vh; */
+    width: 20vw;
     border-right: 1px solid gray;
 `
 
@@ -80,7 +81,7 @@ const Image = styled.img`
 
 const IconsList = styled.div`
     width: 100%;
-    height: 80%;
+    height: 100%;
     display: flex;
     flex-direction: column;
 `
@@ -116,10 +117,11 @@ const Bottom = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
-    height: 9%;
+    
+    
     border-radius: 30px;
     width: 100%;
-    margin-top: 5px;
+    margin-top: 20px;
 `
 
 const ProfileImage = styled.img`
