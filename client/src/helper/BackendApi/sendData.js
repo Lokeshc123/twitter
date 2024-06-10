@@ -222,3 +222,35 @@ export const sendMsg = async (data) => {
     }
   }
 };
+
+export const deleteTweet = async (tweetId) => {
+  try {
+    const response = await axios.delete(`${baseUrl}/api/tweets/${tweetId}`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.log("Error in deleteTweet:", error.message);
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: "Network Error or Server not responding" };
+    }
+  }
+};
+
+export const UpTweet = async (data, tweetId) => {
+  try {
+    const response = await axios.put(`${baseUrl}/api/tweets/${tweetId}`, data, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.log("Error in UpTweet:", error.message);
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: "Network Error or Server not responding" };
+    }
+  }
+};

@@ -24,29 +24,29 @@ const Right = () => {
         getUs();
     }, []);
 
-    // useEffect(() => {
-    //     const fetchTrending = async () => {
-    //         try {
-    //             const response = await getNews();
+    useEffect(() => {
+        const fetchTrending = async () => {
+            try {
+                const response = await getNews();
 
-    //             const selectOneFromEachCluster = (clusters) => {
-    //                 return clusters.map(cluster => {
-    //                     const newsItems = cluster.News;
-    //                     const randomIndex = Math.floor(Math.random() * newsItems.length);
-    //                     return newsItems[randomIndex];
-    //                 });
-    //             };
+                const selectOneFromEachCluster = (clusters) => {
+                    return clusters.map(cluster => {
+                        const newsItems = cluster.News;
+                        const randomIndex = Math.floor(Math.random() * newsItems.length);
+                        return newsItems[randomIndex];
+                    });
+                };
 
-    //             const selectedNews = selectOneFromEachCluster(response.news);
-    //             setRandomNews(selectedNews);
+                const selectedNews = selectOneFromEachCluster(response.news);
+                setRandomNews(selectedNews);
 
-    //             console.log("Selected news from each cluster", selectedNews);
-    //         } catch (error) {
-    //             console.error(error);
-    //         }
-    //     };
-    //     fetchTrending();
-    // }, []);
+                console.log("Selected news from each cluster", selectedNews);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+        fetchTrending();
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {

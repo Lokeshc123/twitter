@@ -5,6 +5,7 @@ import { UserContext } from '../context/UserContext'
 import { getUserTweets } from '../helper/BackendApi/getData'
 import Posts from './Posts'
 import UpdateDetails from '../modals/UserDetails'
+import PostUser from './PostUser'
 const Profile = () => {
     const { setSelectedOption, user } = useContext(UserContext)
     const [tweets, setTweets] = useState([])
@@ -61,7 +62,7 @@ const Profile = () => {
                 </UpdateDetailsButton>
             </UserDetails>
             {tweets.map((tweet) => (
-                <Posts key={tweet._id} tweet={tweet} />
+                <PostUser key={tweet._id} tweet={tweet} />
             ))}
         </Container>
     )

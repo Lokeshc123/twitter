@@ -4,10 +4,14 @@ import { FaRegComment } from "react-icons/fa";
 import { BiRepost } from "react-icons/bi";
 import { CiHeart } from "react-icons/ci";
 import { formatDistanceToNow } from 'date-fns';
-import { likeTweet } from '../helper/BackendApi/sendData';
+import { MdEdit } from "react-icons/md";
+import { MdDeleteOutline } from "react-icons/md";
+import { deleteTweet, likeTweet } from '../helper/BackendApi/sendData';
+import UpdatePost from '../modals/UpdatePost';
 
-const Posts = ({ tweet }) => {
+const PostUser = ({ tweet }) => {
     const [clicked, setClicked] = useState(false)
+    const [showModal, setShowModal] = useState(false)
     const formattedTime = formatDistanceToNow(new Date(tweet.createdAt), { addSuffix: true });
     const handleLike = async () => {
         try {
@@ -15,6 +19,15 @@ const Posts = ({ tweet }) => {
             setClicked(!clicked);
             console.log(response);
 
+        }
+        catch (error) {
+            console.log("Error in handleLike:", error);
+        }
+    }
+    const delTwe = async () => {
+        try {
+            const response = await deleteTweet(tweet._id);
+            console.log(response);
         }
         catch (error) {
             console.log("Error in handleLike:", error);
@@ -35,9 +48,22 @@ const Posts = ({ tweet }) => {
                             marginTop: 2
 
                         }}>{formattedTime}</Time>
+                        {showModal && <UpdatePost setShowModal={setShowModal} id={tweet._id} />}
+                        <Icons>
+                            <MdEdit size={20} color='gray' style={{
+                                marginLeft: 10
+                            }}
+                                onClick={() => setShowModal(true)}
+                            />
+                            <MdDeleteOutline size={20} color='gray' style={{
+                                marginLeft: 10
+                            }}
+                                onClick={delTwe}
+                            />
+                        </Icons>
                     </NameContainer>
                     <Content>
-                        {tweet?.text}
+                        <Text>{tweet?.text}</Text>
                         {tweet.image.length > 0 && <Image src={tweet?.image[0]?.url} alt="tweet" style={{
                             width: 300,
                             height: 300,
@@ -75,7 +101,7 @@ const Posts = ({ tweet }) => {
     )
 }
 
-export default Posts
+export default PostUser
 
 const Container = styled.div`
     display: flex;
@@ -106,6 +132,7 @@ const NameContainer = styled.div`
     flex-direction: row;
     margin-left: 5px;
     margin-top: 0;
+    
  
 `
 const Name = styled.h1`
@@ -122,7 +149,7 @@ const Username = styled.p`
 const Content = styled.div`
     display: flex;
     flex-direction: column;
- 
+  
     margin-left: 10px;
 
     width: 100%;
@@ -155,5 +182,18 @@ const Time = styled.p`
     color: gray;
     font-size: 15px;
     margin-top: 0;
-    align-self: center;
+`
+const Icons = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 20%;
+    margin-left: 10px;
+`
+const Text = styled.p`
+    color: white;
+    font-size: 20px;
+
+    margin: 0;
 `

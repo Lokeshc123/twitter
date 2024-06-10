@@ -44,7 +44,7 @@ const Chat = () => {
                 message: msg
             }
             const res = await sendMsg(data);
-            setConvo([...convo, res.data]); // Assuming response contains the new message
+            setConvo([...convo, res.data]);
             setMsg("");
         }
         catch (error) {

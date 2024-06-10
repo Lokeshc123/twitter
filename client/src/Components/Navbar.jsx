@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { IoMdHome } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
@@ -10,10 +10,24 @@ import { FaXTwitter } from "react-icons/fa6";
 import { PiDotsThreeCircleLight } from "react-icons/pi";
 import { UserContext } from '../context/UserContext';
 import { getUserData } from '../helper/BackendApi/getData';
+import { CiLogout } from "react-icons/ci";
+import { useNavigate } from 'react-router-dom';
+import Cookies from 'universal-cookie'
 
 const Navbar = () => {
+    const cookies = new Cookies()
+    const [showModal, setShowModal] = useState(false)
+    const navigate = useNavigate()
     const { user, setUser, setSelectedOption, setSelectedUser, setSelectedMsg } = useContext(UserContext);
     console.log("User", user);
+    const handleLogout = () => {
+        cookies.remove('token_auth');
+        navigate('/')
+
+
+    }
+
+
     useEffect(() => {
         const fetchDetailsToken = async () => {
             try {
@@ -61,11 +75,12 @@ const Navbar = () => {
                     <LuUser2 color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Profile</Text>
                 </IconContainer>
-                <IconContainer onClick={() => { setSelectedOption("More"); setSelectedUser(null); setSelectedMsg(null); }}>
-                    <PiDotsThreeCircleLight color='white' size={30} style={{ marginLeft: 3 }} />
-                    <Text>More</Text>
+                <IconContainer onClick={handleLogout}>
+                    <CiLogout color='white' size={25} style={{ marginLeft: 5 }} />
+                    <Text>Logout</Text>
                 </IconContainer>
-                <Button>
+
+                <Button >
                     Post
                 </Button>
                 <Bottom>
