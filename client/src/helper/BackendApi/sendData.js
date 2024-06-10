@@ -142,3 +142,83 @@ export const rejectFollowRequest = async (friendId) => {
     }
   }
 };
+
+export const sendMsgRequest = async (friendId) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/api/users/send-messagereq/${friendId}`,
+      null,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in sendMsgRequest:", error.message);
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: "Network Error or Server not responding" };
+    }
+  }
+};
+
+export const acceptMsgRequest = async (friendId) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/api/users/acc-message/${friendId}`,
+      null,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in acceptMsgRequest:", error.message);
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: "Network Error or Server not responding" };
+    }
+  }
+};
+
+export const rejectMsgRequest = async (friendId) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/api/users/reject-message/${friendId}`,
+      null,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in rejectMsgRequest:", error.message);
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: "Network Error or Server not responding" };
+    }
+  }
+};
+
+export const sendMsg = async (data) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/api/messages/sendmessage`,
+      data,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in sendMsg:", error.message);
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: "Network Error or Server not responding" };
+    }
+  }
+};

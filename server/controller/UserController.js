@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bycrypt = require("bcryptjs");
 const cloudinary = require("cloudinary");
+const mongoose = require("mongoose");
 const sendToken = require("../utils/Token");
 const register = async (req, res) => {
   const { name, email, password, username } = req.body;
@@ -278,6 +279,127 @@ const rejectFollowRequest = async (req, res) => {
   }
 };
 
+const sendMsgRequest = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const friendId = req.params.friendId;
+
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (!user) {
+      return res.status(404).json({ message: "Logged In User not found" });
+    }
+    if (!friend) {
+      return res.status(404).json({ message: "Friend not found" });
+    }
+    if (user.messageRequestsSent.includes(friendId)) {
+      return res.status(400).json({ message: "Already sent message request" });
+    }
+    if (friend.messageReceived.includes(userId)) {
+      return res.status(400).json({ message: "Already sent message request" });
+    }
+    user.messageRequestsSent.push(friendId);
+    friend.messageRequestReceived.push(userId);
+    await user.save();
+    await friend.save();
+    res.status(200).json({ message: "Message request sent" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getAllMSGRequests = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const user = await User.findById(userId).populate("messageRequestReceived");
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res
+      .status(200)
+      .json({ messageRequestsReceived: user.messageRequestReceived });
+  } catch (error) {
+    console.error("Error fetching friend requests received:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const acceptMsgRequest = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const friendId = req.params.friendId;
+
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (!user || !friend) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (user.messageReceived.includes(friendId)) {
+      return res.status(400).json({ message: "Already sent message request" });
+    }
+
+    user.messageReceived.push(friendId);
+    friend.messageReceived.push(userId);
+
+    user.messageRequestReceived = user.messageRequestReceived.filter(
+      (id) => id.toString() !== friendId
+    );
+    friend.messageRequestsSent = friend.messageRequestsSent.filter(
+      (id) => id.toString() !== userId
+    );
+
+    await user.save();
+    await friend.save();
+
+    res.status(200).json({ message: "Message request accepted" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const rejectMsgRequest = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const friendId = req.params.friendId;
+
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (!user || !friend) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.messageRequestsReceived = user.messageRequestsReceived.filter(
+      (id) => id.toString() !== friendId
+    );
+    friend.messageRequestsSent = friend.messageRequestsSent.filter(
+      (id) => id.toString() !== userId
+    );
+
+    await user.save();
+    await friend.save();
+    res.status(200).json({ message: "Message request rejected" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+const getAllMsgs = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).populate("messageReceived");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json({ messages: user.messageReceived });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -292,4 +414,9 @@ module.exports = {
   getFriendRequestsReceived,
   acceptFollowRequest,
   rejectFollowRequest,
+  sendMsgRequest,
+  acceptMsgRequest,
+  rejectMsgRequest,
+  getAllMSGRequests,
+  getAllMsgs,
 };

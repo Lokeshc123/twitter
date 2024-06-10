@@ -1,10 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
-import { acceptFollowRequest, rejectFollowRequest } from '../helper/BackendApi/sendData';
+import { acceptFollowRequest, acceptMsgRequest, rejectFollowRequest } from '../helper/BackendApi/sendData';
 import { set } from 'mongoose';
 
-const FollowCard = ({ req, setFollowRequests }) => {
-
+const FollowCard = ({ req, setFollowRequests, msg }) => {
+    const acceptMsgReq = async () => {
+        try {
+            const res = await acceptMsgRequest(req._id);
+            console.log(res);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
     const acceptRequest = async () => {
         try {
             const res = await acceptFollowRequest(req._id);
@@ -33,10 +41,11 @@ const FollowCard = ({ req, setFollowRequests }) => {
                 <TextContainer>
                     <Name>{req.name}</Name>
                     <Username>@{req.username}</Username>
+                    {msg && <Text>Wants to send you message</Text> || <Text>Wants to follow you</Text>}
                 </TextContainer>
             </DetailContainer>
             <ButtonContainer>
-                <AcceptButton onClick={acceptRequest}>Accept</AcceptButton>
+                <AcceptButton onClick={msg ? acceptMsgReq : acceptRequest}>Accept</AcceptButton>
                 <RejectButton onClick={rejectRequest}>Reject</RejectButton>
             </ButtonContainer>
         </Container>
@@ -122,4 +131,10 @@ const DetailContainer = styled.div`
     display: flex;
     flex-direction: row;
     align-items: center;
+`
+
+const Text = styled.p`
+    color: #bdc3c7;
+    font-size: 14px;
+    margin: 5px 0 0 0;
 `

@@ -53,3 +53,38 @@ export const getFrnReq = async () => {
     console.log(error);
   }
 };
+export const getAllMsgReq = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/users/all-msgreq`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getAllMsgPartner = async () => {
+  try {
+    const response = await axios.get(`${baseUrl}/api/users/getmsg`, {
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const getConvo = async (senderId, receiverId) => {
+  try {
+    const response = await axios.get(
+      `${baseUrl}/api/messages/getmessages/${senderId}/${receiverId}`,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log(error);
+  }
+};

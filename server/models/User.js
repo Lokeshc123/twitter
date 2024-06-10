@@ -84,6 +84,12 @@ const userSchema = new mongoose.Schema({
       ref: "User",
     },
   ],
+  messageRequestReceived: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ],
   createdAt: {
     type: Date,
     default: Date.now,

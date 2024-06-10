@@ -12,7 +12,7 @@ import { UserContext } from '../context/UserContext';
 import { getUserData } from '../helper/BackendApi/getData';
 
 const Navbar = () => {
-    const { user, setUser, setSelectedOption, setSelectedUser } = useContext(UserContext);
+    const { user, setUser, setSelectedOption, setSelectedUser, setSelectedMsg } = useContext(UserContext);
     console.log("User", user);
     useEffect(() => {
         const fetchDetailsToken = async () => {
@@ -33,35 +33,35 @@ const Navbar = () => {
         <Container>
             <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/X_logo.jpg/1200px-X_logo.jpg" alt="logo" />
             <IconsList>
-                <IconContainer onClick={() => { setSelectedOption("Home"); setSelectedUser(null); }}>
+                <IconContainer onClick={() => { setSelectedOption("Home"); setSelectedUser(null); setSelectedMsg(null); }}>
                     <IoMdHome color='white' size={32} />
                     <Text>Home</Text>
                 </IconContainer>
-                <IconContainer onClick={() => { setSelectedOption("Search"); setSelectedUser(null); }}>
+                <IconContainer onClick={() => { setSelectedOption("Search"); setSelectedUser(null); setSelectedMsg(null); }}>
                     <CiSearch color='white' size={32} />
                     <Text>Search</Text>
                 </IconContainer>
-                <IconContainer onClick={() => { setSelectedOption("Notifications"); setSelectedUser(null); }}>
+                <IconContainer onClick={() => { setSelectedOption("Notifications"); setSelectedUser(null); setSelectedMsg(null); }}>
                     <IoIosNotificationsOutline color='white' size={32} />
                     <Text>Notifications</Text>
                 </IconContainer>
-                <IconContainer onClick={() => { setSelectedOption("Messages"); setSelectedUser(null); }}>
+                <IconContainer onClick={() => { setSelectedOption("Messages"); setSelectedUser(null); setSelectedMsg(null); }}>
                     <FaRegMessage color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Messages</Text>
                 </IconContainer>
-                <IconContainer onClick={() => { setSelectedOption("Communities"); setSelectedUser(null); }}>
+                <IconContainer onClick={() => { setSelectedOption("Communities"); setSelectedUser(null); setSelectedMsg(null); }}>
                     <TbUsers color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Communities</Text>
                 </IconContainer>
-                <IconContainer onClick={() => { setSelectedOption("Premium"); setSelectedUser(null); }}>
+                <IconContainer onClick={() => { setSelectedOption("Premium"); setSelectedUser(null); setSelectedMsg(null); }}>
                     <FaXTwitter color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Premium</Text>
                 </IconContainer>
-                <IconContainer onClick={() => { setSelectedOption("Profile"); setSelectedUser(null); }}>
+                <IconContainer onClick={() => { setSelectedOption("Profile"); setSelectedUser(null); setSelectedMsg(null); }}>
                     <LuUser2 color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Profile</Text>
                 </IconContainer>
-                <IconContainer onClick={() => { setSelectedOption("More"); setSelectedUser(null); }}>
+                <IconContainer onClick={() => { setSelectedOption("More"); setSelectedUser(null); setSelectedMsg(null); }}>
                     <PiDotsThreeCircleLight color='white' size={30} style={{ marginLeft: 3 }} />
                     <Text>More</Text>
                 </IconContainer>

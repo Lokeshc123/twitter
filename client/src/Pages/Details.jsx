@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { GoArrowLeft } from 'react-icons/go';
 import { UserContext } from '../context/UserContext';
-import { sendFollowRequest } from '../helper/BackendApi/sendData';
+import { sendFollowRequest, sendMsgRequest } from '../helper/BackendApi/sendData';
 import { getUserTweets } from '../helper/BackendApi/getData';
 import Posts from '../Components/Posts';
 
@@ -11,7 +11,17 @@ const Details = () => {
     const { selectedUser, setSelectedUser } = useContext(UserContext);
     const [tweets, setTweets] = useState([]);
     const [requestSent, setRequestSent] = useState(false);
-
+    console.log("Selected User", selectedUser._id);
+    const SendMsgRequest = async () => {
+        try {
+            const res = await sendMsgRequest(selectedUser._id);
+            console.log("Response", res);
+            alert(res.message);
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
     const sendReq = async () => {
         try {
             const res = await sendFollowRequest(selectedUser._id);
@@ -67,7 +77,7 @@ const Details = () => {
                 </ProfileDetails>
                 <ButtonContainer>
                     <FollowButton onClick={sendReq}>{requestSent ? "Req Sent" : "Follow"}</FollowButton>
-                    <SendMessageButton>Message</SendMessageButton>
+                    <SendMessageButton onClick={SendMsgRequest}>Message Req</SendMessageButton>
                 </ButtonContainer>
             </ProfileDetailsContainer>
             {tweets.map((tweet) => (

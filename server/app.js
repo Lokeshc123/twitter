@@ -1,29 +1,9 @@
 const express = require("express");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const user = require("./routes/UserRoutes");
-const tweet = require("./routes/TweetRoutes");
-const comment = require("./routes/CommentRoutes");
-const message = require("./routes/MessageRoutes");
+
 const http = require("http");
 const socketIo = require("socket.io");
 
 const app = express();
-
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-  })
-);
-app.use(bodyParser.json({ limit: "50mb" }));
-app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
-app.use(cookieParser());
-app.use("/api/users", user);
-app.use("/api/tweets", tweet);
-app.use("/api/comments", comment);
-app.use("/api/messages", message);
 
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -34,20 +14,28 @@ const io = socketIo(server, {
   },
 });
 
-const socketUsers = {};
+const userSocketMap = {};
+
+// module.exports = { userSocketMap };
+
+const getrecid = (receiverId) => {
+  console.log("Getting in function", userSocketMap[receiverId]);
+  return userSocketMap[receiverId];
+};
 
 io.on("connection", (socket) => {
-  console.log("New client connected");
+  console.log("a user connected", socket.id);
 
   const userId = socket.handshake.query.userId;
-  if (userId) {
-    socketUsers[userId] = socket.id;
-  }
-  io.emit("onlineUsers", Object.keys(socketUsers));
+  if (userId) userSocketMap[userId] = socket.id;
+
+  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+
   socket.on("disconnect", () => {
-    console.log("Client disconnected");
-    delete socketUsers[userId];
-    io.emit("onlineUsers", Object.keys(socketUsers));
+    console.log("user disconnected", socket.id);
+    delete userSocketMap[userId];
+    io.emit("getOnlineUsers", Object.keys(userSocketMap));
   });
 });
-module.exports = { app, io, server };
+
+module.exports = { app, server, io, getrecid, userSocketMap };

@@ -8,14 +8,19 @@ import Notification from '../Components/Notification';
 import { UserContext } from '../context/UserContext';
 import Details from './Details';
 import Profile from '../Components/Profile';
+import Message from '../Components/Message';
+import Chat from '../Components/Chat';
 
 const Home = () => {
-    const { selectedUser, selectedOption } = useContext(UserContext);
+    const { selectedUser, selectedOption, selectedMsg, } = useContext(UserContext);
     console.log("Selected Option", selectedOption);
 
     const renderContent = () => {
         if (selectedUser) {
             return <Details />;
+        }
+        if (selectedMsg) {
+            return <Chat />;
         }
         switch (selectedOption) {
             case 'Home':
@@ -25,7 +30,9 @@ const Home = () => {
             case 'Notifications':
                 return <Notification />;
             case 'Profile':
-                return <Profile />
+                return <Profile />;
+            case 'Messages':
+                return <Message />;
             default:
                 return <Middle />;
         }

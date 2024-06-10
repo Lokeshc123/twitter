@@ -1,26 +1,19 @@
 import React, { useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { GoArrowLeft } from 'react-icons/go'
-import { useNavigate } from 'react-router-dom'
 import { UserContext } from '../context/UserContext'
-import { getAllMsgReq, getFrnReq } from '../helper/BackendApi/getData'
-import FollowCard from './FollowCard'
-const Notification = () => {
-    const navigate = useNavigate()
+import { getAllMsgPartner } from '../helper/BackendApi/getData'
+import MessageCard from './MessageCard'
+
+const Message = () => {
     const { setSelectedOption } = useContext(UserContext)
-    const [followRequests, setFollowRequests] = useState([])
-    const [allMsgReq, setAllMsgReq] = useState([])
+    const [partners, setPartners] = useState([])
     useEffect(() => {
         const fetchReq = async () => {
             try {
-                const res = await getFrnReq()
-                const res_msg = await getAllMsgReq();
-                console.log("Msg Req", res_msg.messageRequestsReceived);
-                setAllMsgReq(res_msg.messageRequestsReceived);
-
-
-                setFollowRequests(res.followRequestsReceived)
-
+                const res = await getAllMsgPartner();
+                console.log("Msg Partner", res.messages);
+                setPartners(res.messages);
             }
             catch (error) {
                 console.log(error)
@@ -39,24 +32,17 @@ const Notification = () => {
                     onClick={() => setSelectedOption("Home")}
 
                 />
-                <Text>Notifications</Text>
+                <Text>Messages</Text>
             </Header>
-            {followRequests.length === 0 && allMsgReq.length === 0 && <Text>No Notifications</Text>}
-            {followRequests.map((req) => (
-                <FollowCard key={req._id} msg={false} req={req} setFollowRequests={setFollowRequests} />
+            {partners.length === 0 && <Text>No Messages</Text>}
+            {partners.map((partner) => (
+                <MessageCard key={partner._id} partner={partner} />
             ))}
-
-            {allMsgReq.map((req) => (
-                <FollowCard key={req._id} msg={true} req={req} setFollowRequests={setFollowRequests} />
-            ))}
-
-
         </Container>
     )
 }
 
-export default Notification
-
+export default Message
 const Container = styled.div`
     display: flex;
     flex-direction: column;

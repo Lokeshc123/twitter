@@ -5,6 +5,7 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [selectedOption, setSelectedOption] = useState("Home");
+  const [selectedMsg, setSelectedMsg] = useState(null);
   return (
     <UserContext.Provider
       value={{
@@ -14,6 +15,8 @@ export const UserProvider = ({ children }) => {
         setSelectedUser,
         selectedOption,
         setSelectedOption,
+        selectedMsg,
+        setSelectedMsg,
       }}
     >
       {children}
