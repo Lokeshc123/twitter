@@ -12,6 +12,8 @@ const {
   getUserTweets,
 
   getFriendRequestsReceived,
+  acceptFollowRequest,
+  rejectFollowRequest,
 } = require("../controller/UserController");
 const { isVerified } = require("../middleware/auth");
 
@@ -31,5 +33,7 @@ router.route("/friend-requests").get(isVerified, getFriendRequestsReceived);
 router.route("/:userId").get(isVerified, getUserById);
 router.route("/follow/:userId").post(isVerified, sendFollowRequest);
 router.route("/tweets/:userId").get(isVerified, getUserTweets);
+router.route("/accept-follow/:friendId").post(isVerified, acceptFollowRequest);
+router.route("/reject-follow/:friendId").post(isVerified, rejectFollowRequest);
 
 module.exports = router;

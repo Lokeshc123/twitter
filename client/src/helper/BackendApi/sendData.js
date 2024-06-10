@@ -102,3 +102,43 @@ export const updateUserWithId = async (data, userId) => {
     }
   }
 };
+
+export const acceptFollowRequest = async (friendId) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/api/users/accept-follow/${friendId}`,
+      null,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in acceptFollowRequest:", error.message);
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: "Network Error or Server not responding" };
+    }
+  }
+};
+
+export const rejectFollowRequest = async (friendId) => {
+  try {
+    const response = await axios.post(
+      `${baseUrl}/api/users/reject-follow/${friendId}`,
+      null,
+      {
+        withCredentials: true,
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.log("Error in rejectFollowRequest:", error.message);
+    if (error.response) {
+      return error.response.data;
+    } else {
+      return { error: "Network Error or Server not responding" };
+    }
+  }
+};

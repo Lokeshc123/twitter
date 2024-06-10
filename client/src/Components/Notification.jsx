@@ -36,8 +36,9 @@ const Notification = () => {
                 />
                 <Text>Notifications</Text>
             </Header>
+            {followRequests.length === 0 && <Text>No new notifications</Text>}
             {followRequests.map((req) => (
-                <FollowCard key={req._id} req={req} />
+                <FollowCard key={req._id} req={req} setFollowRequests={setFollowRequests} />
             ))}
 
         </Container>
@@ -63,4 +64,5 @@ const Text = styled.p`
     font-size: 20px;
     margin: 0;
     margin-left: 10px;
+    align-self: center;
 `

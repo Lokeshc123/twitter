@@ -1,7 +1,31 @@
 import React from 'react'
 import styled from 'styled-components'
+import { acceptFollowRequest, rejectFollowRequest } from '../helper/BackendApi/sendData';
+import { set } from 'mongoose';
 
-const FollowCard = ({ req }) => {
+const FollowCard = ({ req, setFollowRequests }) => {
+
+    const acceptRequest = async () => {
+        try {
+            const res = await acceptFollowRequest(req._id);
+            console.log(res);
+            setFollowRequests((prev) => prev.filter((request) => request._id !== req._id));
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
+    const rejectRequest = async () => {
+        try {
+            const res = await rejectFollowRequest(req._id);
+            setFollowRequests((prev) => prev.filter((request) => request._id !== req._id));
+            console.log(res);
+
+        }
+        catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <Container>
             <DetailContainer>
@@ -12,8 +36,8 @@ const FollowCard = ({ req }) => {
                 </TextContainer>
             </DetailContainer>
             <ButtonContainer>
-                <AcceptButton>Accept</AcceptButton>
-                <RejectButton>Reject</RejectButton>
+                <AcceptButton onClick={acceptRequest}>Accept</AcceptButton>
+                <RejectButton onClick={rejectRequest}>Reject</RejectButton>
             </ButtonContainer>
         </Container>
     )

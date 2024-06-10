@@ -212,6 +212,72 @@ const getFriendRequestsReceived = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// Accept a follow request
+const acceptFollowRequest = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const friendId = req.params.friendId;
+
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (!user || !friend) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (user.followers.includes(friendId)) {
+      return res.status(400).json({ message: "Already following the user" });
+    }
+    if (friend.following.includes(userId)) {
+      return res.status(400).json({ message: "Already following the user" });
+    }
+    if (!user.followRequestsReceived.includes(friendId)) {
+      return res.status(400).json({ message: "No follow request found" });
+    }
+    user.followers.push(friendId);
+    friend.following.push(userId);
+    user.followRequestsReceived = user.followRequestsReceived.filter(
+      (id) => id.toString() !== friendId
+    );
+    friend.followRequestsSent = friend.followRequestsSent.filter(
+      (id) => id.toString() !== userId
+    );
+
+    await user.save();
+    await friend.save();
+
+    res.status(200).json({ message: "Follow request accepted" });
+  } catch (error) {
+    console.error("Error accepting follow request:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+const rejectFollowRequest = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const friendId = req.params.friendId;
+
+    const user = await User.findById(userId);
+    const friend = await User.findById(friendId);
+
+    if (!user || !friend) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    user.followRequestsReceived = user.followRequestsReceived.filter(
+      (id) => id.toString() !== friendId
+    );
+    friend.followRequestsSent = friend.followRequestsSent.filter(
+      (id) => id.toString() !== userId
+    );
+
+    await user.save();
+    await friend.save();
+    res.status(200).json({ message: "Follow request rejected" });
+  } catch (error) {
+    console.error("Error rejecting follow request:", error.message);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   register,
   login,
@@ -224,4 +290,6 @@ module.exports = {
   sendFollowRequest,
   getUserTweets,
   getFriendRequestsReceived,
+  acceptFollowRequest,
+  rejectFollowRequest,
 };
