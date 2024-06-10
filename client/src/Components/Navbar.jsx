@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import styled from 'styled-components'
 import { IoMdHome } from "react-icons/io";
 import { CiSearch } from "react-icons/ci";
@@ -8,41 +8,60 @@ import { TbUsers } from "react-icons/tb";
 import { LuUser2 } from "react-icons/lu";
 import { FaXTwitter } from "react-icons/fa6";
 import { PiDotsThreeCircleLight } from "react-icons/pi";
+import { UserContext } from '../context/UserContext';
+import { getUserData } from '../helper/BackendApi/getData';
 
 const Navbar = () => {
+    const { user, setUser, setSelectedOption, setSelectedUser } = useContext(UserContext);
+    console.log("User", user);
+    useEffect(() => {
+        const fetchDetailsToken = async () => {
+            try {
+                const response = await getUserData();
+                console.log("Response token", response);
+                setUser(response.user);
+
+            }
+            catch (error) {
+                console.log(error);
+            }
+        }
+        fetchDetailsToken();
+    }
+        , [])
     return (
         <Container>
             <Image src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/X_logo.jpg/1200px-X_logo.jpg" alt="logo" />
             <IconsList>
-                <IconContainer>
+                <IconContainer onClick={() => { setSelectedOption("Home"); setSelectedUser(null); }}>
                     <IoMdHome color='white' size={32} />
                     <Text>Home</Text>
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={() => { setSelectedOption("Search"); setSelectedUser(null); }}>
                     <CiSearch color='white' size={32} />
                     <Text>Search</Text>
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={() => { setSelectedOption("Notifications"); setSelectedUser(null); }}>
                     <IoIosNotificationsOutline color='white' size={32} />
                     <Text>Notifications</Text>
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={() => { setSelectedOption("Messages"); setSelectedUser(null); }}>
                     <FaRegMessage color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Messages</Text>
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={() => { setSelectedOption("Communities"); setSelectedUser(null); }}>
                     <TbUsers color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Communities</Text>
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={() => { setSelectedOption("Premium"); setSelectedUser(null); }}>
                     <FaXTwitter color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Premium</Text>
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={() => { setSelectedOption("Profile"); setSelectedUser(null); }}>
                     <LuUser2 color='white' size={25} style={{ marginLeft: 5 }} />
                     <Text>Profile</Text>
                 </IconContainer>
-                <IconContainer>
+                <IconContainer onClick={() => { setSelectedOption("More"); setSelectedUser(null); }}>
                     <PiDotsThreeCircleLight color='white' size={30} style={{ marginLeft: 3 }} />
                     <Text>More</Text>
                 </IconContainer>
@@ -50,10 +69,10 @@ const Navbar = () => {
                     Post
                 </Button>
                 <Bottom>
-                    <ProfileImage src="https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg?size=626&ext=jpg&ga=GA1.1.1141335507.1717718400&semt=ais_user" alt="profile" />
+                    <ProfileImage src={user?.avatar?.url} alt="profile" />
                     <Content>
-                        <Name>John Doe</Name>
-                        <Username>@johndoe</Username>
+                        <Name>{user?.name}</Name>
+                        <Username>@{user?.username}</Username>
                     </Content>
                 </Bottom>
             </IconsList>
@@ -93,6 +112,7 @@ const IconContainer = styled.div`
     height: 52px;
     margin-bottom: 5px;
     margin-left: 10px;
+    cursor: pointer;    
 `
 
 const Text = styled.p`

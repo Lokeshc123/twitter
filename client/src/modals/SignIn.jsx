@@ -1,14 +1,17 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { RxCross2 } from "react-icons/rx";
 import Logo from "../assets/Imgs/Logo.png"
 import { loginUser } from '../helper/BackendApi/sendData';
+import Cookies from 'universal-cookie'
 import { useNavigate } from 'react-router-dom';
+import { UserContext } from '../context/UserContext';
 const SignIn = ({ setShowSignIn, setShowSignUp }) => {
-
+    const cookies = new Cookies()
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const navigate = useNavigate()
+    const { setUser } = useContext(UserContext)
     const signIn = async () => {
         try {
             const data = {
@@ -18,7 +21,9 @@ const SignIn = ({ setShowSignIn, setShowSignUp }) => {
             console.log("Data", data)
             const response = await loginUser(data);
             if (response.user) {
+                cookies.set('token_auth', response.token, { expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) });
                 navigate('/home')
+                setUser(response.user)
             }
 
 

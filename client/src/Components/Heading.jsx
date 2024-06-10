@@ -20,7 +20,7 @@ export default Heading
 
 const Container = styled.div`
     display: flex;
-    height: 10%;
+   height : 100px;
     width: 100%;
     border-bottom: 1px solid gray;
 `

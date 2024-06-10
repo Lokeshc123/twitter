@@ -1,10 +1,24 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import SignUp from '../modals/SignUp';
 
 import Logo from "../assets/Imgs/Logo.png"
 import SignIn from '../modals/SignIn';
+import Cookies from 'universal-cookie'
+import { useNavigate } from 'react-router-dom';
 const LandingPage = () => {
+    // const { user, setUser } = useContext(UserContext);
+    const navigate = useNavigate()
+    const cookies = new Cookies()
+    useEffect(() => {
+        const token = cookies.get('token_auth')
+        if (token) {
+            navigate('/home')
+        }
+    }, [])
+
+
+
     const [showSignUp, setShowSignUp] = useState(false);
     const [showSignIn, setShowSignIn] = useState(false);
     return (

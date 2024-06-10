@@ -1,16 +1,37 @@
 const Tweet = require("../models/Tweets");
 const User = require("../models/User");
-
+const cloudinary = require("cloudinary");
 const createTweet = async (req, res) => {
   const { text, image, video } = req.body;
+
+  console.log(req.body);
   try {
+    let uploadedImages = [];
+
+    if (Array.isArray(image) && image.length > 0) {
+      for (const imagePath of image) {
+        const result = await cloudinary.v2.uploader.upload(imagePath, {
+          folder: "tweets",
+        });
+        uploadedImages.push({
+          public_id: result.public_id,
+          url: result.secure_url,
+        });
+      }
+    }
+
     const tweet = await Tweet.create({
       user: req.user.id,
       text,
-      image,
+      image: uploadedImages,
       video,
     });
+
+    const user = await User.findById(req.user.id);
+    user.tweets.push(tweet._id);
+    await user.save();
     await tweet.save();
+
     res.status(201).json({
       success: true,
       message: "Tweet created successfully",
@@ -20,6 +41,7 @@ const createTweet = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 // Update a tweet
 const updateTweet = async (req, res) => {
   try {

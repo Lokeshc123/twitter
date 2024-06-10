@@ -8,9 +8,16 @@ const tweetSchema = new mongoose.Schema({
   text: {
     type: String,
   },
-  image: {
-    type: String,
-  },
+  image: [
+    {
+      public_id: {
+        type: String,
+      },
+      url: {
+        type: String,
+      },
+    },
+  ],
   video: {
     type: String,
   },

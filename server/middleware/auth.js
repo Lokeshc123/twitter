@@ -2,16 +2,18 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const isVerified = async (req, res, next) => {
   try {
-    const { token } = req.cookies;
+    const token = req.cookies.token_auth;
+
     if (!token) {
       return res.status(401).json({
         success: false,
         message: "Please Login first to access this resource",
       });
     }
+
     const decode = jwt.verify(token, process.env.JWT_SECRET);
     req.user = await User.findById(decode.id);
-    console.log(req.user);
+
     next();
   } catch (error) {
     return res.status(401).json({
